@@ -85,20 +85,6 @@ jobs:
 
             :information_source: `/retry` とコメントすると、もう一度計測ができます
             :information_source: 登録内容を変更する場合は、issue を閉じて作り直してください
-      - name: Comment
-        uses: peter-evans/create-or-update-comment@a35cf36e5301d70b76f316e867e7788a55a31dae # renovate: tag=v1.4.5
-        if: needs.payload.outputs.competition-status == 'opened'
-        with:
-          comment-id: ${{ fromJSON(needs.payload.outputs.result).report_comment_id }}
-          edit-mode: replace
-          body: |
-            ## レギュレーションチェック
-
-            :hourglass_flowing_sand: **VRT を実行しています**
-
-            ---
-
-            Actions: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
   comment-failure-scoring:
     runs-on: ubuntu-20.04
     needs:
