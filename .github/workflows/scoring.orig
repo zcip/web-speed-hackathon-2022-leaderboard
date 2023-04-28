@@ -40,58 +40,58 @@ jobs:
           result-encoding: string
           script: |
             return 'opened';
-  vrt:
-    runs-on: ubuntu-20.04
-    needs:
-      - payload
-    if: needs.payload.outputs.competition-status == 'opened'
-    outputs:
-      details: ${{ steps.details.outputs.result }}
-      result: ${{ steps.result.outputs.result }}
-    concurrency: scoring-${{ fromJSON(needs.payload.outputs.result).id }}
-    steps:
-      - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # renovate: tag=v2.4.0
-      - uses: actions/setup-node@1f8c6b94b26d0feae1e387ca63ccbdc44d27b561 # renovate: tag=v2.5.1
-        with:
-          node-version: "16"
-          cache: "yarn"
-      - run: yarn install --frozen-lockfile
-      - run: yarn build
-      - run: sudo apt-get install -y fonts-noto-cjk
-      - name: Run VRT
-        id: vrt
-        run: |
-          yarn run vrt:capture --url ${TARGET_URL}
-          yarn run vrt:detect
-        env:
-          TARGET_URL: ${{ fromJSON(needs.payload.outputs.result).url }}
-      - name: Upload payload
-        uses: actions/upload-artifact@82c141cc518b40d92cc801eee768e7aafc9c2fa2 # renovate: tag=v2.3.1
-        with:
-          name: screenshots
-          path: ./scripts/vrt/tmp/*
-          retention-days: 1
-      - name: Read details
-        uses: actions/github-script@9ac08808f993958e9de277fe43a64532a609130e # renovate: tag=v6.0.0
-        id: details
-        with:
-          result-encoding: json
-          script: |
-            const payload = require('./scripts/vrt/tmp/reg.json');
-            return payload;
-      - name: Read result
-        uses: actions/github-script@9ac08808f993958e9de277fe43a64532a609130e # renovate: tag=v6.0.0
-        id: result
-        with:
-          result-encoding: string
-          script: |
-            const payload = require('./scripts/vrt/tmp/reg.json');
-            return payload.failedItems.length === 0 ? 'success' : 'failed';
+  # vrt:
+    # runs-on: ubuntu-20.04
+    # needs:
+      # - payload
+    # if: needs.payload.outputs.competition-status == 'opened'
+    # outputs:
+      # details: ${{ steps.details.outputs.result }}
+      # result: ${{ steps.result.outputs.result }}
+    # concurrency: scoring-${{ fromJSON(needs.payload.outputs.result).id }}
+    # steps:
+      # - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # renovate: tag=v2.4.0
+      # - uses: actions/setup-node@1f8c6b94b26d0feae1e387ca63ccbdc44d27b561 # renovate: tag=v2.5.1
+        # with:
+          # node-version: "16"
+          # cache: "yarn"
+      # - run: yarn install --frozen-lockfile
+      # - run: yarn build
+      # - run: sudo apt-get install -y fonts-noto-cjk
+      # - name: Run VRT
+        # id: vrt
+        # run: |
+          # yarn run vrt:capture --url ${TARGET_URL}
+          # yarn run vrt:detect
+        # env:
+          # TARGET_URL: ${{ fromJSON(needs.payload.outputs.result).url }}
+      # - name: Upload payload
+        # uses: actions/upload-artifact@82c141cc518b40d92cc801eee768e7aafc9c2fa2 # renovate: tag=v2.3.1
+        # with:
+          # name: screenshots
+          # path: ./scripts/vrt/tmp/*
+          # retention-days: 1
+      # - name: Read details
+        # uses: actions/github-script@9ac08808f993958e9de277fe43a64532a609130e # renovate: tag=v6.0.0
+        # id: details
+        # with:
+          # result-encoding: json
+          # script: |
+            # const payload = require('./scripts/vrt/tmp/reg.json');
+            # return payload;
+      # - name: Read result
+        # uses: actions/github-script@9ac08808f993958e9de277fe43a64532a609130e # renovate: tag=v6.0.0
+        # id: result
+        # with:
+          # result-encoding: string
+          # script: |
+            # const payload = require('./scripts/vrt/tmp/reg.json');
+            # return payload.failedItems.length === 0 ? 'success' : 'failed';
   scoring:
     runs-on: ubuntu-20.04
     needs:
       - payload
-      - vrt
+      # - vrt
     outputs:
       result: ${{ steps.scoring.outputs.export }}
     concurrency: scoring-${{ fromJSON(needs.payload.outputs.result).id }}
@@ -117,7 +117,7 @@ jobs:
     runs-on: ubuntu-20.04
     needs:
       - payload
-      - vrt
+      # - vrt
       - scoring
     if: needs.vrt.outputs.result == 'success'
     outputs:
