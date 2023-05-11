@@ -44,7 +44,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: POST /initialize -X POST -I
-      - run: curl -sS ${{ TARGET_URL }}/api/initialize -X POST -I
+        run: curl -sS ${{ TARGET_URL }}/api/initialize -X POST -I
   scoring:
     runs-on: ubuntu-20.04
     needs:
