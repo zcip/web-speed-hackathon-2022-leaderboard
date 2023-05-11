@@ -42,9 +42,13 @@ jobs:
             return 'opened';
   initialize:
     runs-on: ubuntu-20.04
+    needs:
+      - payload
     steps:
       - name: POST /initialize -X POST -I
         run: curl -sS ${TARGET_URL}/api/initialize -X POST -I
+        env:
+          TARGET_URL: ${{ fromJSON(needs.payload.outputs.result).url }}
   scoring:
     runs-on: ubuntu-20.04
     needs:
